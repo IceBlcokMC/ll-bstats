@@ -1,26 +1,50 @@
-# LeviLamina Mod Template
+# ll-bstats - BStats(bukkit) for levilamina
 
-Mod Template for LeviLamina
+此库通过模拟 bStats bukkit 协议，可以让 levilamina 的插件接入 bStats 统计。
+
+This library simulates the bukkit protocol of bStats, allowing levilamina plugins to access bStats statistics.
 
 ## Usage
 
-For detailed instructions, see the [LeviLamina Documentation](https://lamina.levimc.org/developer_guides/tutorials/create_your_first_mod/)
+1. 你需要注册一个 bStats 插件，并获取插件 ID （仅支持 Bukkit 分区）
 
-1. Generate a new repository from this template
-2. Clone the new repository
-3. Change the mod name and the expected LeviLamina version in `xmake.lua`
-4. Add your code.
-5. Run `xmake f -y -p windows -a x64 -m release` in the root of the repository
-6. Run `xmake` to build the mod.
+You need to register a bStats plugin and get the plugin ID (only supports Bukkit partition)
 
-After a successful build, you will find mod in `bin/`
+2. 在 xmake.lua 中添加 bStats 依赖
 
-## Contributing
+Add bStats dependency in xmake.lua
 
-Ask questions by creating an issue.
+```lua
+add_repositories("iceblcokmc https://github.com/IceBlcokMC/xmake-repo.git")
 
-PRs accepted.
+add_requires("ll-bstats")
+
+target("YourPlugin")
+    add_packages("ll-bstats") -- add bstats to your plugin
+```
+
+3. 在插件中添加 bStats 统计
+
+Add bStats statistics to your plugin
+
+```cpp
+#include "ll-bstats/Telemetry.h"
+
+class YourMod {
+    std::unique_ptr<ll_bstats::Telemetry> telemetry;
+
+    void enable() {
+        telemetry = std::make_unique<ll_bstats::Telemetry>(YourPluginID, "YourPluginVersion");
+        telemetry->launch(YourThreadPoolExecutor);
+    }
+
+    void disable() {
+        telemetry->shutdown();
+        telemetry.reset();
+    }
+}
+```
 
 ## License
 
-CC0-1.0 © LeviMC(LiteLDev)
+MIT License
