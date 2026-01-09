@@ -13,7 +13,10 @@ namespace ll_bstats {
 
 
 class Telemetry {
-    bstats::bukkit::BukkitPayload                 payload;
+protected:
+    bstats::bukkit::BukkitPayload payload;
+
+private:
     std::shared_ptr<std::atomic<bool>>            quit{nullptr};
     std::shared_ptr<ll::coro::InterruptableSleep> sleep{nullptr};
 
