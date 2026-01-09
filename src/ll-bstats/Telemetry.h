@@ -22,7 +22,7 @@ private:
 
 public:
     explicit Telemetry(int pluginId, std::string pluginVersion);
-    ~Telemetry();
+    virtual ~Telemetry();
 
     static std::string const& getServiceUUID();
 
