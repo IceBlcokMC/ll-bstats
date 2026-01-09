@@ -88,6 +88,14 @@ struct BukkitPayload {
     BukkitPayload() = default;
     explicit BukkitPayload(std::string_view serverUUID, int pluginId) : serverUUID(serverUUID), service{pluginId, {}} {}
 
+    inline void addCustomChart(std::variant<SimplePie, AdvancedPie> chart) {
+        service.customCharts.push_back(std::move(chart));
+    }
+    inline std::vector<std::variant<SimplePie, AdvancedPie>> const& getCustomCharts() const {
+        return service.customCharts;
+    }
+    inline std::vector<std::variant<SimplePie, AdvancedPie>>& getCustomCharts() { return service.customCharts; }
+
     inline nlohmann::json to_json() const {
         nlohmann::json body;
         body["serverUUID"]              = serverUUID;
