@@ -6,9 +6,9 @@ add_repositories("levimc-repo https://github.com/LiteLDev/xmake-repo.git")
 -- add_requires("levilamina develop") to use develop version
 -- please note that you should add bdslibrary yourself if using dev version
 if is_config("target_type", "server") then
-    add_requires("levilamina 1.7.0", {configs = {target_type = "server"}})
+    add_requires("levilamina 1.9.0", {configs = {target_type = "server"}})
 else
-    add_requires("levilamina", {configs = {target_type = "client"}})
+    add_requires("levilamina 1.9.0", {configs = {target_type = "client"}})
 end
 
 add_requires("cpr[ssl=y] 1.12.0")
@@ -42,10 +42,3 @@ target("ll-bstats")
     else
         add_defines("LL_PLAT_C")
     end
-    -- if is_config("target_type", "server") then
-    --     add_includedirs("src-server")
-    --     add_files("src-server/**.cc")
-    -- else
-    --     add_includedirs("src-client")
-    --     add_files("src-client/**.cc")
-    -- end
