@@ -63,9 +63,14 @@ std::string const& Telemetry::getServiceUUID() {
 }
 
 void Telemetry::initConstant() {
-    payload.osArch     = "amd64";
-    payload.coreCount  = std::thread::hardware_concurrency();
+    payload.osArch    = "amd64";
+    payload.coreCount = std::thread::hardware_concurrency();
+
+#ifdef LL_PLAT_S
     payload.onlineMode = ll::service::getPropertiesSettings().value().mIsOnlineMode;
+#elif LL_PLAT_C
+    payload.onlineMode = true;
+#endif
 
     payload.osName    = ll::sys_utils::isWine() ? "Linux" : "Windows";
     payload.osVersion = ll::sys_utils::getSystemVersion().to_string();
