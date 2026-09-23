@@ -75,7 +75,7 @@ void Telemetry::initConstant() {
     payload.osName    = ll::sys_utils::isWine() ? "Linux" : "Windows";
     payload.osVersion = ll::sys_utils::getSystemVersion().to_string();
 
-    payload.bukkitVersion = Common::getBuildInfo().mGameVersion;
+    payload.bukkitVersion = ll::getGameVersion().to_string();
 }
 
 void Telemetry::collect() {
