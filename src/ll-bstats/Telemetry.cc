@@ -2,8 +2,8 @@
 #include "ll-bstats/bstats/Bukkit.h"
 
 #include "ll/api/Versions.h"
+#include "ll/api/coro/ConditionVariable.h"
 #include "ll/api/coro/CoroTask.h"
-#include "ll/api/coro/InterruptableSleep.h"
 #include "ll/api/io/FileUtils.h"
 #include "ll/api/mod/Mod.h"
 #include "ll/api/service/Bedrock.h"
@@ -104,19 +104,19 @@ void Telemetry::submit() {
 void Telemetry::launch(ll::thread::ThreadPoolExecutor& executor) {
     initConstant();
 
-    quit  = std::make_shared<std::atomic<bool>>(false);
-    sleep = std::make_shared<ll::coro::InterruptableSleep>();
-    ll::coro::keepThis([sleep = sleep, quit = quit, this]() -> ll::coro::CoroTask<> {
-        co_await sleep->sleepFor(std::chrono::minutes{1} * ll::random_utils::rand(3.0, 6.0));
+    quit = std::make_shared<std::atomic<bool>>(false);
+    cv   = std::make_shared<ll::coro::ConditionVariable>();
+    ll::coro::keepThis([sleep = cv, quit = quit, this]() -> ll::coro::CoroTask<> {
+        co_await sleep->waitFor(std::chrono::minutes{1} * ll::random_utils::rand(3.0, 6.0));
         if (!quit->load()) {
             submit();
         }
-        co_await sleep->sleepFor(std::chrono::minutes{1} * ll::random_utils::rand(1.0, 30.0));
+        co_await sleep->waitFor(std::chrono::minutes{1} * ll::random_utils::rand(1.0, 30.0));
         if (!quit->load()) {
             submit();
         }
         while (!quit->load()) {
-            co_await sleep->sleepFor(std::chrono::minutes{30});
+            co_await sleep->waitFor(std::chrono::minutes{30});
             if (quit->load()) {
                 break;
             }
@@ -128,7 +128,7 @@ void Telemetry::launch(ll::thread::ThreadPoolExecutor& executor) {
 
 void Telemetry::shutdown() {
     quit->store(true);
-    sleep->interrupt(true);
+    cv->notifyAll(true);
 }
 
 } // namespace ll_bstats

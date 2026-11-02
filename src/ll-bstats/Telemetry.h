@@ -6,7 +6,7 @@
 #include "ll/api/thread/ThreadPoolExecutor.h"
 
 namespace ll::coro {
-class InterruptableSleep;
+class ConditionVariable;
 }
 
 namespace ll_bstats {
@@ -17,8 +17,8 @@ protected:
     bstats::bukkit::BukkitPayload payload;
 
 private:
-    std::shared_ptr<std::atomic<bool>>            quit{nullptr};
-    std::shared_ptr<ll::coro::InterruptableSleep> sleep{nullptr};
+    std::shared_ptr<std::atomic<bool>>           quit{nullptr};
+    std::shared_ptr<ll::coro::ConditionVariable> cv{nullptr};
 
 public:
     explicit Telemetry(int pluginId, std::string pluginVersion);
