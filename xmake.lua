@@ -6,9 +6,9 @@ add_repositories("levimc-repo https://github.com/LiteLDev/xmake-repo.git")
 -- add_requires("levilamina develop") to use develop version
 -- please note that you should add bdslibrary yourself if using dev version
 if is_config("target_type", "server") then
-    add_requires("levilamina f28a4b5dd6454948f163b4649238dfecabb7485f", {configs = {target_type = "server"}})
+    add_requires("levilamina 26.60.0", {configs = {target_type = "server"}})
 else
-    add_requires("levilamina f28a4b5dd6454948f163b4649238dfecabb7485f", {configs = {target_type = "client"}})
+    add_requires("levilamina 26.60.0", {configs = {target_type = "client"}})
 end
 
 -- cpr's 'ssl' config is deprecated and enables SSH (libssh2), not TLS.
